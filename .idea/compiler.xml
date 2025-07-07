@@ -6,18 +6,22 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="stock-trading-server" />
         <module name="stock-trading-client" />
+        <module name="stock-trading-server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="grpc" target="1.5" />
+      <module name="grpc" target="21" />
+      <module name="stock-trading-client-streaming" target="1.8" />
+      <module name="stock-trading-server-streaming" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="grpc" options="-parameters" />
       <module name="stock-trading-client" options="" />
       <module name="stock-trading-server" options="-parameters" />
+      <module name="stock-trading-server-streaming" options="-parameters" />
     </option>
   </component>
 </project>

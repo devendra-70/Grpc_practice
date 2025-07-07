@@ -8,10 +8,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class StockTradingClientApplication implements CommandLineRunner {
 
-	StockClientService stockClientService;
+	private final StockClientService stockClientService;
 
-	StockTradingClientApplication(StockClientService stockClientService){
-		this.stockClientService=stockClientService;
+	// Constructor injection
+	public StockTradingClientApplication(StockClientService stockClientService) {
+		this.stockClientService = stockClientService;
 	}
 
 	public static void main(String[] args) {
@@ -19,8 +20,16 @@ public class StockTradingClientApplication implements CommandLineRunner {
 	}
 
 	@Override
-	public void run(String... args) throws Exception{
-		System.out.println("Grpc client response : "+stockClientService.getStockPrice("AAPL"));
-	}
+	public void run(String... args) {
+		System.out.println("Starting gRPC streaming client...");
 
+		// 🔑 Correct method call:
+		stockClientService.subscribeStockPrice("AAPL");
+
+		// ✅ If you also want the unary call, uncomment:
+        /*
+        StockResponse response = stockClientService.getStockPrice("AAPL");
+        System.out.println("Unary gRPC response: " + response);
+        */
+	}
 }
