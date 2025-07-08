@@ -114,4 +114,23 @@ public class StockClientService {
             requestObserver.onError(e);
         }
         }
+
+    public void startTrading(){
+        stockTradingServiceStub.liveTrading(new StreamObserver<TradeStatus>() {
+            @Override
+            public void onNext(TradeStatus tradeStatus) {
+                System.out.println("server response:"+tradeStatus);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.out.println("error:"+throwable.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                System.out.println("stream completed");
+            }
+        });
+    }
 }
