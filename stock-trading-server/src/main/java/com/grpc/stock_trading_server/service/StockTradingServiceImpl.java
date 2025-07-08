@@ -8,6 +8,8 @@ import org.springframework.grpc.server.service.GrpcService;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -99,6 +101,42 @@ public class StockTradingServiceImpl extends StockTradingServiceGrpc.StockTradin
 
 
                 responseObserver.onNext(orderSummary);
+                responseObserver.onCompleted();
+            }
+        };
+    }
+
+    @Override
+    public StreamObserver<StockOrder> liveTrading(StreamObserver<TradeStatus> responseObserver){
+        return new StreamObserver<StockOrder>() {
+            @Override
+            public void onNext(StockOrder stockOrder) {
+                System.out.println("Recieved order: "+stockOrder);
+                String status="EXECUTED";
+                String message="Order placed succesfully";
+
+                if(stockOrder.getQuantity()<=0){
+                    status="FAILED";
+                    message="Invalid quantity";
+                }
+
+                TradeStatus tradeStatus=TradeStatus.newBuilder()
+                        .setOrderId(stockOrder.getOrderId())
+                        .setMessage(message)
+                        .setStauts(status)
+                        .setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME))
+                        .build();
+
+                responseObserver.onNext(tradeStatus);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.out.println("error"+throwable.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
                 responseObserver.onCompleted();
             }
         };
