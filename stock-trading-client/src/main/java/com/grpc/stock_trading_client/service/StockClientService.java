@@ -1,5 +1,6 @@
 package com.grpc.stock_trading_client.service;
 
+import com.stocks.grpc.OrderSummary;
 import com.stocks.grpc.StockRequest;
 import com.stocks.grpc.StockResponse;
 import com.stocks.grpc.StockTradingServiceGrpc;
@@ -53,4 +54,28 @@ public class StockClientService {
             }
         });
     }
+
+    public void placeBulkOrders(){
+
+        StreamObserver<OrderSummary> responseObserver=new StreamObserver<OrderSummary>() {
+            @Override
+            public void onNext(OrderSummary orderSummary) {
+                System.out.println("Order Summary Recieved from Server:");
+                System.out.println("Total orders: "+orderSummary.getTotalOrders());
+                System.out.println("Successful Orders: "+orderSummary.getSuccessCount());
+                System.out.println("Total Amount: "+orderSummary.getTotalAmount());
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.out.println("Order summary Recieved error from server"+throwable.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                System.out.println("Order Summary Recieved from server");
+            }
+
+            };
+        }
 }
