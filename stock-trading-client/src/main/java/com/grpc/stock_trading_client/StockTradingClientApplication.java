@@ -23,13 +23,18 @@ public class StockTradingClientApplication implements CommandLineRunner {
 	public void run(String... args) {
 		System.out.println("Starting gRPC streaming client...");
 
-		// 🔑 Correct method call:
+		// for server straming
+		/*
 		stockClientService.subscribeStockPrice("AAPL");
+
+		 */
 
 		// ✅ If you also want the unary call, uncomment:
         /*
         StockResponse response = stockClientService.getStockPrice("AAPL");
         System.out.println("Unary gRPC response: " + response);
         */
+
+		stockClientService.placeBulkOrders();
 	}
 }

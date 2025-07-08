@@ -1,9 +1,6 @@
 package com.grpc.stock_trading_client.service;
 
-import com.stocks.grpc.OrderSummary;
-import com.stocks.grpc.StockRequest;
-import com.stocks.grpc.StockResponse;
-import com.stocks.grpc.StockTradingServiceGrpc;
+import com.stocks.grpc.*;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
@@ -77,5 +74,44 @@ public class StockClientService {
             }
 
             };
+
+        StreamObserver<StockOrder> requestObserver=stockTradingServiceStub.bulkStockOrder(responseObserver);
+
+        //send multiple stream of stock order message/request
+
+        try{
+            requestObserver.onNext(
+                    StockOrder.newBuilder()
+                            .setOrderId("1")
+                            .setStockSymbol("AAPL")
+                            .setOrderType("BUY")
+                            .setPrice(150.5)
+                            .setQuantity(10)
+                            .build());
+
+            requestObserver.onNext(
+                    StockOrder.newBuilder()
+                            .setOrderId("2")
+                            .setStockSymbol("GOOGL")
+                            .setOrderType("SELL")
+                            .setPrice(2700)
+                            .setQuantity(5)
+                            .build());
+
+            requestObserver.onNext(
+                    StockOrder.newBuilder()
+                            .setOrderId("3")
+                            .setStockSymbol("TSLA")
+                            .setOrderType("BUY")
+                            .setPrice(700)
+                            .setQuantity(8)
+                            .build());
+
+
+            //done sending orders
+            requestObserver.onCompleted();
+        } catch (Exception e) {
+            requestObserver.onError(e);
+        }
         }
 }
