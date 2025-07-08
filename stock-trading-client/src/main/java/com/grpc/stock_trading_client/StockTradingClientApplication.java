@@ -35,6 +35,10 @@ public class StockTradingClientApplication implements CommandLineRunner {
         System.out.println("Unary gRPC response: " + response);
         */
 
+		//client streaming
 		stockClientService.placeBulkOrders();
+
+		//server streaming
+		stockClientService.startTrading();
 	}
 }

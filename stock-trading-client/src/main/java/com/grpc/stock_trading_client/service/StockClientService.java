@@ -116,7 +116,7 @@ public class StockClientService {
         }
 
     public void startTrading(){
-        stockTradingServiceStub.liveTrading(new StreamObserver<TradeStatus>() {
+        StreamObserver<StockOrder> requestObserver=stockTradingServiceStub.liveTrading(new StreamObserver<TradeStatus>() {
             @Override
             public void onNext(TradeStatus tradeStatus) {
                 System.out.println("server response:"+tradeStatus);
@@ -132,5 +132,25 @@ public class StockClientService {
                 System.out.println("stream completed");
             }
         });
+
+        for(int i=1;i<=10;i++){
+            try {
+                StockOrder stockOrder = StockOrder.newBuilder()
+                        .setOrderId("order" + i)
+                        .setStockSymbol("AAPL")
+                        .setQuantity(i * 10)
+                        .setPrice(150.0 + i)
+                        .build();
+
+                requestObserver.onNext(stockOrder);
+                Thread.sleep(1000);
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
+
+        }
+
+        requestObserver.onCompleted();
     }
 }
